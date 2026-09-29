@@ -11,7 +11,7 @@
 ---
 
 ## 🌐 Link Direto para Uso no Navegador
-👉 **[https://marco-dev-pinheiro.github.io/livro-interativo-java/](https://marco-dev-pinheiro.github.io/livro-interativo-java/)**
+👉 **[https://marco-dev-pinheiro.github.io/livro-interativo-java/](https://livro-interativo-java-mp6212026.vercel.app/)**
 
 *(Funciona diretamente em qualquer navegador, computador ou smartphone, sem necessidade de instalar nada).*
 
