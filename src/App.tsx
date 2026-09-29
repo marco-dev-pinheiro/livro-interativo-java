@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ViewMode } from './types';
 import { VisualMapView } from './views/VisualMapView';
-import { PooBookView } from './views/PooBookView';
-import { RoadmapView } from './views/RoadmapView';
-import { QuickRefView } from './views/QuickRefView';
-import { QuizView } from './views/QuizView';
-import { SearchModal } from './components/SearchModal';
 import { Search, BookOpen, Layers, Compass, Zap, HelpCircle, CheckCircle2 } from 'lucide-react';
+
+const PooBookView = lazy(() => import('./views/PooBookView').then(m => ({ default: m.PooBookView })));
+const RoadmapView = lazy(() => import('./views/RoadmapView').then(m => ({ default: m.RoadmapView })));
+const QuickRefView = lazy(() => import('./views/QuickRefView').then(m => ({ default: m.QuickRefView })));
+const QuizView = lazy(() => import('./views/QuizView').then(m => ({ default: m.QuizView })));
+const SearchModal = lazy(() => import('./components/SearchModal').then(m => ({ default: m.SearchModal })));
+
+const ViewLoading = () => (
+  <div className="py-20 flex flex-col items-center justify-center text-slate-400">
+    <div className="w-8 h-8 border-2 border-slate-700 border-t-amber-400 rounded-full animate-spin mb-3"></div>
+    <span className="text-xs font-mono uppercase tracking-wider text-slate-500">Carregando módulo...</span>
+  </div>
+);
 
 const viewVariants = {
   initial: { opacity: 0, y: 12 },
@@ -31,6 +39,23 @@ export default function App() {
 
   const [pooSectionTarget, setPooSectionTarget] = useState<string | undefined>('classes');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Background prefetch for instant navigation without lag
+  useEffect(() => {
+    const prefetch = () => {
+      import('./views/PooBookView');
+      import('./views/RoadmapView');
+      import('./views/QuickRefView');
+      import('./views/QuizView');
+      import('./components/SearchModal');
+    };
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as Window & { requestIdleCallback: (fn: () => void) => number }).requestIdleCallback(prefetch);
+    } else {
+      const timer = setTimeout(prefetch, 800);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   // Sync hash with view
   useEffect(() => {
@@ -193,10 +218,12 @@ export default function App() {
               exit="exit"
               transition={viewTransition}
             >
-              <PooBookView
-                initialSectionId={pooSectionTarget}
-                onNavigateToArea={navigateToArea}
-              />
+              <Suspense fallback={<ViewLoading />}>
+                <PooBookView
+                  initialSectionId={pooSectionTarget}
+                  onNavigateToArea={navigateToArea}
+                />
+              </Suspense>
             </motion.div>
           )}
 
@@ -209,10 +236,12 @@ export default function App() {
               exit="exit"
               transition={viewTransition}
             >
-              <RoadmapView
-                onNavigateToPoo={navigateToPoo}
-                onNavigateToArea={navigateToArea}
-              />
+              <Suspense fallback={<ViewLoading />}>
+                <RoadmapView
+                  onNavigateToPoo={navigateToPoo}
+                  onNavigateToArea={navigateToArea}
+                />
+              </Suspense>
             </motion.div>
           )}
 
@@ -225,7 +254,9 @@ export default function App() {
               exit="exit"
               transition={viewTransition}
             >
-              <QuickRefView onNavigateToPoo={navigateToPoo} />
+              <Suspense fallback={<ViewLoading />}>
+                <QuickRefView onNavigateToPoo={navigateToPoo} />
+              </Suspense>
             </motion.div>
           )}
 
@@ -238,24 +269,30 @@ export default function App() {
               exit="exit"
               transition={viewTransition}
             >
-              <QuizView onNavigateToPoo={navigateToPoo} />
+              <Suspense fallback={<ViewLoading />}>
+                <QuizView onNavigateToPoo={navigateToPoo} />
+              </Suspense>
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
       {/* Search Modal */}
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        onNavigate={(view, sectionId) => {
-          if (view === 'poo' && sectionId) {
-            setPooSectionTarget(sectionId);
-          }
-          setCurrentView(view);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-      />
+      {isSearchOpen && (
+        <Suspense fallback={null}>
+          <SearchModal
+            isOpen={isSearchOpen}
+            onClose={() => setIsSearchOpen(false)}
+            onNavigate={(view, sectionId) => {
+              if (view === 'poo' && sectionId) {
+                setPooSectionTarget(sectionId);
+              }
+              setCurrentView(view);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Semantic Footer */}
       <footer className="border-t border-slate-900 bg-slate-950/80 py-8 text-center text-xs text-slate-500">
