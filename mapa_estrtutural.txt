@@ -1,0 +1,36 @@
+├── 📄 index.html                # Ponto de entrada HTML e metadados
+├── 📄 package.json              # Dependências e scripts de build/dev/lint
+├── 📄 tsconfig.json             # Configurações do compilador TypeScript
+├── 📄 vite.config.ts            # Configurações do bundler Vite + Tailwind
+├── 📄 metadata.json             # Metadados do applet
+│
+└── 📁 src/
+    ├── 📄 main.tsx              # Ponto de entrada React (DOM mount)
+    ├── 📄 App.tsx               # Orquestrador principal (rotas de estado, transições e busca global ⌘K)
+    ├── 📄 index.css             # Estilos globais e import do Tailwind CSS
+    │
+    ├── 📁 types/                # CONTRATOS & TIPAGEM ESTÁTICA
+    │   └── index.ts             # Tipos centrais (RoadmapStep, FunExercise, PortfolioProject, ChallengeLab, etc.)
+    │
+    ├── 📁 data/                 # CONTEÚDO PEDAGÓGICO & BASES DE CONHECIMENTO
+    │   ├── roadmap.ts           # As 8 etapas da trilha (conceitos, treinos, desafios, portfólios e labs)
+    │   ├── javaAreas.ts         # As 10 áreas fundamentais do mapa visual
+    │   ├── pooContent.ts        # Conteúdo do Livro de Orientação a Objetos
+    │   ├── quickReference.ts    # Base da Consulta Rápida ("Quero fazer X")
+    │   └── quizQuestions.ts     # Questões do Quiz de fixação
+    │
+    ├── 📁 components/           # COMPONENTES VISUAIS & INTERATIVOS REUTILIZÁVEIS
+    │   ├── CodeBlock.tsx        # Bloco de código com syntax highlight e cópia
+    │   ├── SearchModal.tsx      # Modal de busca global com atalho (⌘K / Ctrl+K)
+    │   ├── AreaDetailModal.tsx  # Modal de detalhe das áreas de Java
+    │   ├── InteractiveMindMap.tsx # Mapa mental SVG com nós expansíveis
+    │   ├── AccessModifierMatrix.tsx # Simulador visual de visibilidade (public/private/etc.)
+    │   └── RelationshipExplorer.tsx # Simulador de relacionamentos (Associação/Composição)
+    │
+    └── 📁 views/                # TELAS / PÁGINAS PRINCIPAIS DO SITE
+        ├── VisualMapView.tsx    # Visão 1: Mapa Panorâmico das 10 áreas Java
+        ├── PooBookView.tsx      # Visão 2: Livro Interativo de POO
+        ├── RoadmapView.tsx      # Visão 3: Trilha de Estudos (Linha do tempo das 8 etapas)
+        ├── StepStudyView.tsx    # Visão 4: Página dedicada de estudo de cada etapa (4 abas)
+        ├── QuickRefView.tsx     # Visão 5: Consulta Rápida com filtros
+        └── QuizView.tsx         # Visão 6: Quiz de autoavaliação

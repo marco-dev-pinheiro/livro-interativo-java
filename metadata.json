@@ -1,0 +1,6 @@
+{
+  "name": "Java Manual de Estudos & Guia Visual POO",
+  "description": "Livro interativo de estudos e mapa visual de Java: fundamentos, POO aprofundada, mapa mental dinâmico, trilha de aprendizado e consulta rápida.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
